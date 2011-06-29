@@ -2,4 +2,4 @@ tmp
 build/iphone/*
 .project
 .DS_Store
-.setings
+.settings/
