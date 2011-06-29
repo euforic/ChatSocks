@@ -2,6 +2,9 @@ Chat Socks
 
 Titanium Appcelerator implementation of socket.io chat example
 
+###Socket.io Chat Example 
+``https://github.com/LearnBoost/socket.io/tree/master/examples/chat``
+
 Using a webview and Global events.
 
 ----------------------------------
