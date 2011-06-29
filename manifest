@@ -1,0 +1,8 @@
+#appname:Chat Socks
+#publisher:Christian Sullivan
+#url:http://roguesynaptics.com
+#image:appicon.png
+#appid:com.xogix.chatsocks
+#desc: Titanium implementation of socket.io chat 
+#type:ipad
+#guid:9abdf08c-dee8-4ca9-9f26-9faf658f2bbe
