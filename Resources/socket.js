@@ -5,15 +5,15 @@ socket.on('connect', function () {
 	Ti.App.fireEvent('nickname:get');
 });
 socket.on('announcement', function (msg) {
-	$('#lines').append($('<p>').append($('<em>').text(msg)));
+	message('Announcement',msg);
 });
 socket.on('nicknames', function (nicknames) {
-	$('#nicknames').empty().append($('<span>Online: </span>'));
+	var nicks = [];
 	for (var i in nicknames) {
-		$('#nicknames').append($('<b>').text(nicknames[i]));
+		nicks.push(nicknames[i]);
 	}
+	Ti.App.fireEvent('userlist:set',{users:nicks});
 });
-socket.on('user message', message);
 socket.on('reconnect', function () {
 	message('System', 'Reconnected to the server');
 });
@@ -24,28 +24,41 @@ socket.on('error', function (e) {
 	message('System', e ? e : 'A unknown error occurred');
 });
 function message (from, msg) {
-	$('#lines').append($('<p>').append($('<b>').text(from), msg));
+	Ti.App.fireEvent('message:add',{user:from,message:msg});
 	//Fires event listern in socket.js wich scrolls chat window to bottom evertime a message is added
-	Ti.App.fireEvent('message:added');
+	//Ti.App.fireEvent('message:scroll');
 }
+
+socket.on('user message', message);
+
 
 /*
  * Event Listeners
  */
-$( function () {
+( function () {
 	//Sets nickname for users socket connection on server
 	Ti.App.addEventListener('nickname:set', function (e) {
 		Ti.API.info('fired -> nickname:set');
-		socket.emit('nickname', e.user, function (set) {
-			if(set) {
-				Ti.App.fireEvent('nickname:get', e.user);
+		socket.emit('nickname', e.user, function (usertaken) {
+			if(usertaken) {
+				Ti.App.fireEvent('nickname:get', {
+					user: e.user,
+					set: false,
+					error:true
+				});
+			} else {
+				Ti.App.fireEvent('nickname:get', {
+					user: e.user,
+					set: true,
+					error:false
+				});
+
 			}
 		});
 	});
 	//Work around for scroll to bottom issue in chat window
-	Ti.App.addEventListener('message:added', function () {
-		Ti.API.info('fired -> message:added');
-		$(document).scrollTop($(document).height());
+	Ti.App.addEventListener('message:scroll', function () {
+		Ti.App.fireEvent('messagelist:fix');
 	});
 	//Sends new message to to server and appends to users chat window
 	Ti.App.addEventListener('message:out', function (e) {
@@ -54,4 +67,4 @@ $( function () {
 		socket.emit('user message', e.message, function (e) {
 		});
 	});
-});
+})();
