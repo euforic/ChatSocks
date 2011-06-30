@@ -1,19 +1,13 @@
-Ti.include('main.js');
+Ti.include('/main.js');
 Titanium.UI.setBackgroundColor('#000');
 var win = Ti.UI.createWindow();
-var socket = Ti.UI.createWebView({
-	url:'webview.html',
-	top:-100,
-	left:-100,
-	width:0,
-	height:0,
-});
-win.add(socket);
+
+socket.connect(win);
 /*
  * Header user list
  */
 var header = Titanium.UI.createScrollView({
-	contentWidth:'auto',
+	contentWidth:'100%',
 	contentHeight:50,
 	top:0,
 	left:0,
@@ -29,24 +23,8 @@ var headerContainer= Ti.UI.createView({
 headerContainer.add(header)
 win.add(headerContainer);
 
-Ti.App.addEventListener('userlist:set', function(e) {
-	Ti.API.info(e.users[0]);
-	for (var x =0; x <= e.users.length-1; x = x + 1) {
-		var currUser = e.users[x];
-		var user = [];
-		user[currUser] = Ti.UI.createButton({
-			title:currUser,
-			top:5,
-			left:(x*60)+5,
-			height:40,
-			width:60
-		});
-		header.add(user[currUser]);
-	}
-});
-
 /*
- * Message Webview and container to kill horizontal scrolling
+ * Message list container
  */
 var container = Ti.UI.createTableView({
 	top:50,
@@ -57,17 +35,6 @@ var container = Ti.UI.createTableView({
 
 win.add(container);
 
-Ti.App.addEventListener('message:add', function(e){
-	container.appendRow({title:e.user+': '+e.message});
-		container.scrollToIndex(container.data[0].rowCount);
-});
-/*
-TODO Fix Message Scroll issue
-Ti.App.addEventListener('messagelist:fix', function(){
-	Ti.API.info(container.data[0].rowCount);
-	container.scrollToIndex(container.data[0].rowCount);
-});
-*/
 /*
  * Input Toolbar
  */
@@ -102,7 +69,7 @@ var toolbar = Titanium.UI.createToolbar({
 });
 win.add(toolbar);
 toolbar.hide();
-//TODO fix tool tip event
+
 var button = Ti.UI.createButton({
 	top:-10,
 	left:-10,
@@ -111,22 +78,46 @@ var button = Ti.UI.createButton({
 });
 win.add(button);
 
-var login = xg.ui.login(button);
-win.add(login);
-login.top = 50;
-login.height = 150;
-login.width = 310;
+var userPrompt = xg.ui.userPrompt();
+win.add(userPrompt);
+userPrompt.top = 50;
+userPrompt.height = 150;
+userPrompt.width = 310;
+
 /*
  * Event Listeners
  */
+socket.on('userlist:set', function(e) {
+	//TODO Remove only the user that goes offline instead of complete re-draw
+	for(var c in header.children) {
+		header.remove(header.children[c]);
+	}
+	for (var x =0; x <= e.users.length-1; x = x + 1) {
+		var currUser = e.users[x];
+		var user = [];
+		user[currUser] = Ti.UI.createButton({
+			title:currUser,
+			top:5,
+			left:(x*60)+5,
+			height:40,
+			width:60
+		});
+		header.add(user[currUser]);
+	}
+});
+socket.on('message:add', function(e) {
+	container.appendRow(xg.ui.chatRow(e));
+	//TODO Fix Message Scroll issue only fires sometime for incoming messages
+	container.scrollToIndex(container.data[0].rowCount);
+});
 sendButton.addEventListener('click', function() {
-	Ti.App.fireEvent('message:out', {
+	socket.emit('message:out', {
 		message:textfield.value
 	});
 	textfield.value = '';
 });
 textfield.addEventListener('return', function () {
-	Ti.App.fireEvent('message:out', {
+	socket.emit('message:out', {
 		message:textfield.value
 	});
 	textfield.value = '';
@@ -139,13 +130,13 @@ textfield.addEventListener('blur', function () {
 	container.height = 370;
 	toolbar.bottom = 0;
 });
-Ti.App.addEventListener('nickname:get', function(e) {
+socket.on('nickname:get', function(e) {
 	Ti.API.info('fired -> nickname:get');
 	if(!e.set) {
-		button.fireEvent('click');
+		userPrompt.fireEvent('show');
 		toolbar.hide();
 	} else {
-		button.fireEvent('click');
+		userPrompt.fireEvent('hide');
 		toolbar.show();
 	}
 });

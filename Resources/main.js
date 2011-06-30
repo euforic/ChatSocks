@@ -1,3 +1,3 @@
 var xg = {};
 
-Ti.include('ui.js');
+Ti.include('/socket.js','/ui.js');
