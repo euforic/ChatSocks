@@ -1,11 +1,17 @@
-Chat Socks
+# Titanium Appcelerator implementation of socket.io chat example 
+## Using a webview and Global events.
 
-Titanium Appcelerator implementation of socket.io chat example
+### Socket.io Chat Example with native ui
 
-Socket.io Chat Example 
-https://github.com/LearnBoost/socket.io/tree/master/examples/chat
+``https://github.com/euforic/ChatSocks/tree/wv-proxy``
 
-Using a webview and Global events.
+### Socket.io Chat Example with webview chat window
+
+``https://github.com/euforic/ChatSocks/tree/master``
+
+### Socket.io web server and client
+
+``https://github.com/LearnBoost/socket.io/tree/master/examples/chat``
 
 ----------------------------------
 License
