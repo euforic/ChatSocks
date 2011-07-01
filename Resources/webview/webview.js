@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:3000');
+var socket = io.connect('http://localhost:3012');
 socket.on('connect', function () {
 	//Fires event listern in app.js to open the nickname prompt
 	Ti.App.fireEvent('nickname:get');
