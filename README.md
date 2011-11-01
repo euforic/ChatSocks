@@ -1,5 +1,4 @@
-# Check out my socket.io module in the Appcelerator Marketplace 
-# [Dirty Sockes - Socket.io for Titanium Appcelerator](https://marketplace.appcelerator.com/apps/954)
+# Check out my socket.io module in the Appcelerator Marketplace - [Dirty Sockes - Socket.io for Titanium Appcelerator](https://marketplace.appcelerator.com/apps/954)
 
 # Titanium Appcelerator implementation of socket.io chat example 
 ## Using a webview and Global events.
