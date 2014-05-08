@@ -7,7 +7,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <id>com.xogix.chatsocks</id>
+    <id>com.bodhi5.chatsocks</id>
     <name>Chat Socks</name>
     <version>0.0.1</version>
     <publisher>Christian Sullivan</publisher>
