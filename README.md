@@ -1,5 +1,5 @@
 # NO LONGER MAINTAINED. ONLY HERE FOR HISTORICAL REASONS.
-Because who doesn't like to look at there old code and thing wtf was I doing :-)
+Because who doesn't like to look at their old code and thing WTF was I doing :-)
 
 # Titanium Appcelerator implementation of socket.io chat example 
 ## Using a webview and Global events.
